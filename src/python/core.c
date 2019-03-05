@@ -1,5 +1,5 @@
 #include <Python.h>
-#include <alloca.h>
+// #include <alloca.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <time.h>
@@ -287,9 +287,19 @@ static PyMethodDef PyethashMethods[] =
                 {NULL, NULL, 0, NULL}
         };
 
+static struct PyModuleDef cModPyDem =
+{
+    PyModuleDef_HEAD_INIT,
+    "pyethash", /* name of module */
+    "",          /* module documentation, may be NULL */
+    -1,          /* size of per-interpreter state of the module, or -1 if the module keeps state in global variables. */
+    PyethashMethods
+};
+
 PyMODINIT_FUNC
-initpyethash(void) {
-    PyObject *module = Py_InitModule("pyethash", PyethashMethods);
+PyInit_pyethash(void) {
+    // PyObject *module = Py_InitModule("pyethash", PyethashMethods);
+    PyObject *module = PyModule_Create(&cModPyDem);
     // Following Spec: https://github.com/ethereum/wiki/wiki/Ethash#definitions
     PyModule_AddIntConstant(module, "REVISION", (long) REVISION);
     PyModule_AddIntConstant(module, "DATASET_BYTES_INIT", (long) DATASET_BYTES_INIT);
@@ -302,4 +312,5 @@ initpyethash(void) {
     PyModule_AddIntConstant(module, "DATASET_PARENTS", (long) DATASET_PARENTS);
     PyModule_AddIntConstant(module, "CACHE_ROUNDS", (long) CACHE_ROUNDS);
     PyModule_AddIntConstant(module, "ACCESSES", (long) ACCESSES);
+    return module;
 }
